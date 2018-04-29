@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
 
+import edu.mum.learnenglish.helper.SettingManager;
 import edu.mum.learnenglish.helper.ShakeManager;
 import edu.mum.learnenglish.model.Word;
 import edu.mum.learnenglish.swipe.WordCard;
@@ -41,6 +42,7 @@ public class RandomWordFragment extends Fragment {
             mSwipeView.addView(new WordCard(mContext, word, mSwipeView));
         }
         ShakeManager shakeManager = new ShakeManager(getContext(),mSwipeView);
+
         return  view;
     }
 }

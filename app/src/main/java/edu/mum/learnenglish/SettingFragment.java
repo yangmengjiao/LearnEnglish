@@ -27,6 +27,7 @@ public class SettingFragment extends Fragment {
     private View settingFragmentView;
     private Switch autoLightSwitch;
     private Switch onlyEnglishSwitch;
+    private Switch shakeSwitch;
 
     public int value=0;
 
@@ -37,7 +38,7 @@ public class SettingFragment extends Fragment {
         settingFragmentView = inflater.inflate(R.layout.fragment_setting, container, false);
         autoLightSwitch = settingFragmentView.findViewById(R.id.switch3);
         onlyEnglishSwitch = settingFragmentView.findViewById(R.id.onlyEnglishSwitch);
-
+        shakeSwitch = settingFragmentView.findViewById(R.id.shakeSwitch);
         autoLightSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -61,6 +62,18 @@ public class SettingFragment extends Fragment {
                 }
             }
         });
+
+        shakeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    SettingManager.setShakeFlag(getContext(),1);
+                }else {
+                    SettingManager.setShakeFlag(getContext(),0);
+                }
+            }
+        });
+
 
         final String[] values = {"forever","5 seconds","10 minutes","30 minutes","1 hour"};//1 minutes is for test
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,values);

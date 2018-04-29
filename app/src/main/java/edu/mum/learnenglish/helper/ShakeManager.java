@@ -71,7 +71,9 @@ public class ShakeManager implements SensorEventListener
         if(NowSpeed>=mSpeed)
         {
           //user shaked the phone
-            mSwipeView.doSwipe(true);
+            if(SettingManager.getShakeFlag(mContext) ==1){
+                mSwipeView.doSwipe(true);
+            }
         }
     }
 }

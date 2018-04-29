@@ -14,6 +14,9 @@ public class SettingManager {
     private static final String KEY_PLAY_TIME = "playTime";
     private static final String defaultKEYPLAYTIME = "forever";//for ever loop
 
+    private static final String KEY_SHAKE_FLAG = "shakeFlag";
+    private static final int defaultShakeFlag= 0;
+
     public static float getLightSensorFlag(Context context) {
 
         return PrefUtils.getInt(context, KEY_LIGHT_SENSOR_FLAG, defaultSensorValue);
@@ -39,6 +42,15 @@ public class SettingManager {
 
     public static void setPlayTime(Context context,String value) {
         PrefUtils.setString(context, KEY_PLAY_TIME, value);
+    }
+
+    public static int getShakeFlag(Context context) {
+
+        return PrefUtils.getInt(context, KEY_SHAKE_FLAG, defaultShakeFlag);
+    }
+
+    public static void setShakeFlag(Context context,int value) {
+        PrefUtils.setInt(context, KEY_SHAKE_FLAG, value);
     }
 
 
