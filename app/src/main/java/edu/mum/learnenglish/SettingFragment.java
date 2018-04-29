@@ -28,11 +28,7 @@ public class SettingFragment extends Fragment {
     private Switch autoLightSwitch;
     private Switch onlyEnglishSwitch;
 
-    private TextView mText;
-    public  EditText wt;
-    public double weight=0.0;
     public int value=0;
-    String x;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,7 +38,6 @@ public class SettingFragment extends Fragment {
         autoLightSwitch = settingFragmentView.findViewById(R.id.switch3);
         onlyEnglishSwitch = settingFragmentView.findViewById(R.id.onlyEnglishSwitch);
 
-        mText = settingFragmentView.findViewById(R.id.textView7);
         autoLightSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -67,41 +62,25 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        String[] values = {"10 minutes","30 minutes","40 minutes","1 hour ","2 hour","forever" };
+        final String[] values = {"forever","5 seconds","10 minutes","30 minutes","1 hour"};//1 minutes is for test
         ArrayAdapter<String> adapter=new ArrayAdapter<String>(getContext(),android.R.layout.simple_spinner_item,values);
         final Spinner spinner = (Spinner) settingFragmentView.findViewById(R.id.spinner);
         spinner.setAdapter(adapter);
 
-        wt = (EditText) settingFragmentView.findViewById(R.id.miss);
-        // Called when the focus state of a view has changed.
-        wt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        int position = adapter.getPosition(SettingManager.getPlayTime(getContext()));   //根据该选项获取位置
+        spinner.setSelection(position);
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            String item = parent.getItemAtPosition(position).toString();
-                            x = wt.getText().toString();
-                            value = Integer.parseInt(x);
-                            int mass =value;
-                            switch (item){
-                                case "10 minutes": weight = mass * 0.38; break;
-                                case "30 minutes": weight = mass * 0.91; break;
-                                case "40 minutes": weight = mass * 1; break;
-                                case "1 hour": weight = mass * 0.38; break;
-                                default : weight = 0.0; break;
-                            }
-                            Toast.makeText(getContext(), weight + " LBs", Toast.LENGTH_LONG).show();
-                        }
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-                        }
-                    });
-                }
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String item = parent.getItemAtPosition(position).toString();
+                SettingManager.setPlayTime(getContext(),item);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
         return settingFragmentView;
 
     }

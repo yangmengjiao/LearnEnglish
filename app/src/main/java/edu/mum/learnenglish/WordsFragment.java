@@ -4,12 +4,16 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SeekBar;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import edu.mum.learnenglish.adapter.WordAdapter;
 import edu.mum.learnenglish.helper.SettingManager;
@@ -23,6 +27,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     SeekBar sBar;
     android.os.Handler handler=new android.os.Handler();
     public String jsonFileName;
+    private Timer timer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,6 +85,7 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         ImageView backward = (ImageView) fragmentView.findViewById(R.id.backward);
         backward.setOnClickListener(this);
 
+
         return fragmentView;
     }
 
@@ -97,7 +103,9 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStop() {
         super.onStop();
-        mPlayer.stop();;
+        mPlayer.stop();
+
+        stopTimer();
     }
 
     @Override
@@ -105,13 +113,39 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()){
 
             case R.id.play:
-                ImageView imageView = (ImageView)v;
+                final ImageView imageView = (ImageView)v;
                 if(mPlayer.isPlaying()){
                     mPlayer.pause();
                     imageView.setImageDrawable(ContextCompat.getDrawable(getContext(),R.drawable.play));
                 }else {
                     mPlayer.start();
                     imageView.setImageDrawable(ContextCompat.getDrawable(getContext(),R.drawable.pause));
+
+                    int playTime = getPlaytime(SettingManager.getPlayTime(getContext()));
+                    if(playTime!=0){
+                        mPlayer.setLooping(false);
+                        timer = new Timer();
+                        timer.schedule(new TimerTask() {
+
+                            @Override
+                            public void run() {
+                                mPlayer.pause();
+                                imageView.setImageDrawable(ContextCompat.getDrawable(getContext(),R.drawable.play));
+                            }
+                        },playTime );
+                    }else{
+                        //loop play
+                        mPlayer.start();
+                        mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                            @Override
+                            public void onCompletion(MediaPlayer arg0) {
+                                mPlayer.start();
+                                mPlayer.setLooping(true);
+                            }
+                        });
+                        stopTimer();
+                    }
+
                 }
                 break;
             case R.id.backward:
@@ -121,6 +155,27 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             case R.id.forward:
                 mPlayer.seekTo(mPlayer.getCurrentPosition()+mPlayer.getDuration()/10);
                 break;
+        }
+    }
+
+    private int getPlaytime(String item){
+        int value = 0;
+        switch (item){
+            case "forever" :value = 0;
+            case "5 seconds":value = 1000; break;
+            case "10 minutes":value = 10*60*1000; break;
+            case "30 minutes":value = 30*60*1000; break;
+            case "1 hour":value = 1*60*60*1000; break;
+            default : value = 0; break;
+        }
+
+        return value;
+    }
+
+    private void stopTimer(){
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
         }
     }
 }
