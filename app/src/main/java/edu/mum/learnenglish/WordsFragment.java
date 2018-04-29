@@ -53,18 +53,18 @@ public class WordsFragment extends Fragment implements View.OnClickListener {
             jsonFileName = "foods.json";
 
             if(SettingManager.getEnglishOnlyFlag(getContext()) == 1){
-                mPlayer=MediaPlayer.create(getContext(),R.raw.workenglish);
+                mPlayer=MediaPlayer.create(getContext(),R.raw.food_en);
             }else{
-                mPlayer=MediaPlayer.create(getContext(),R.raw.workenglish);
+                mPlayer=MediaPlayer.create(getContext(),R.raw.food_en_ch);
             }
 
         }else {
             jsonFileName = "animals.json";
 
             if(SettingManager.getEnglishOnlyFlag(getContext()) == 1){
-                mPlayer=MediaPlayer.create(getContext(),R.raw.workchinese);
+                mPlayer=MediaPlayer.create(getContext(),R.raw.animal_en);
             }else{
-                mPlayer=MediaPlayer.create(getContext(),R.raw.workchinese);
+                mPlayer=MediaPlayer.create(getContext(),R.raw.animals_en_ch);
             }
         }
 
